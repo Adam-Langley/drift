@@ -304,7 +304,7 @@ final class TableIndex {
 /// you might want to choose a different name, for which this annotation can be
 /// used.
 /// {@endtemplate}
-@Target({TargetKind.classType})
+@Target({TargetKind.classType, TargetKind.mixinType})
 class DataClassName {
   /// The overridden name to use when generating the data class for a table.
   /// {@macro drift_custom_data_class}
