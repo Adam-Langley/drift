@@ -327,7 +327,9 @@ class InsertStatement<T extends Table, D> {
             .throwIfInvalid(upsertInsertable);
       }
 
-      final updateSet = upsertInsertable.toColumns(true);
+      // 20240510 Adam-Langley: do not substitute nulls with absent, as the update is
+      // in place of an insert, which should honor all values.
+      final updateSet = upsertInsertable.toColumns(false);
 
       writeOnConflictConstraint(onConflict.target,
           onConflict._targetCondition?.call(table.asDslTable));
