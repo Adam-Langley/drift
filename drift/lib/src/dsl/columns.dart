@@ -308,6 +308,18 @@ extension BuildGeneralColumn<T extends Object> on _BaseColumnBuilder<T> {
   /// primary key. Columns are non-null by default.
   ColumnBuilder<T> nullable() => _isGenerated();
 
+  /// Describes the column in its SQL definition, as a comment written right
+  /// after its type: `"name" TEXT /* the name people know it by */ NOT NULL`.
+  ///
+  /// The database keeps it with its schema (in `sqlite_master` for sqlite3),
+  /// so whoever reads the schema - a person, or a tool writing queries - learns
+  /// what the column is for. It changes nothing about how the column works.
+  /// The comment is written on one line, and a `*/` in it is broken up. Like
+  /// other column options, it must be a constant string.
+  ///
+  /// See also: [GeneratedColumn.$comment].
+  ColumnBuilder<T> comment(String comment) => _isGenerated();
+
   /// Adds UNIQUE constraint to column.
   ///
   /// Unique constraints spanning multiple keys can be added to a table by
