@@ -68,13 +68,6 @@ class GeneratedColumn<T extends Object> extends Column<T> {
   /// created by drift.
   final bool hasAutoIncrement;
 
-  /// A description of the column, written into its definition as an SQL
-  /// comment (`/* ... */`) right after its type, so the database keeps it in
-  /// its schema - in `sqlite_master` for sqlite3.
-  ///
-  /// See also: [BuildGeneralColumn.comment].
-  final String? $comment;
-
   @override
   String get name => $name;
 
@@ -96,7 +89,6 @@ class GeneratedColumn<T extends Object> extends Column<T> {
     this.generatedAs,
     this.check,
     this.hasAutoIncrement = false,
-    this.$comment,
   }) : _defaultConstraints = defaultConstraints;
 
   /// Applies a type converter to this column.
@@ -120,7 +112,6 @@ class GeneratedColumn<T extends Object> extends Column<T> {
       generatedAs,
       check,
       hasAutoIncrement,
-      $comment,
     );
   }
 
@@ -135,14 +126,6 @@ class GeneratedColumn<T extends Object> extends Column<T> {
       into.buffer.write('$escapedName bigserial PRIMARY KEY NOT NULL');
     } else {
       into.buffer.write('$escapedName ${type.sqlTypeName(into)}');
-    }
-
-    // Right after the type, before any constraint: sqlite3 keeps a column
-    // definition's text up to its last token when it adds a column, so a
-    // comment at the end would be lost.
-    final comment = $comment;
-    if (comment != null && comment.trim().isNotEmpty) {
-      into.buffer.write(' /* ${commentText(comment)} */');
     }
 
     if ($customConstraints == null) {
@@ -188,15 +171,6 @@ class GeneratedColumn<T extends Object> extends Column<T> {
         ..write(' ')
         ..write($customConstraints);
     }
-  }
-
-  /// [comment] as it can be written inside an SQL comment: on one line, and
-  /// without a `*/` that would end it early.
-  static String commentText(String comment) {
-    return comment
-        .replaceAll(RegExp(r'\s+'), ' ')
-        .trim()
-        .replaceAll('*/', '* /');
   }
 
   @override
@@ -339,7 +313,6 @@ class GeneratedColumnWithTypeConverter<D, S extends Object>
     GeneratedAs? generatedAs,
     Expression<bool> Function()? check,
     bool hasAutoIncrement,
-    String? comment,
   ) : super(
         name,
         tableName,
@@ -354,7 +327,6 @@ class GeneratedColumnWithTypeConverter<D, S extends Object>
         generatedAs: generatedAs,
         check: check,
         hasAutoIncrement: hasAutoIncrement,
-        $comment: comment,
       );
 
   S? _mapDartValue(D? dartValue) {

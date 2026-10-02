@@ -63,10 +63,6 @@ class DriftColumn implements HasType {
   /// default ones.
   final String? customConstraints;
 
-  /// A description of the column from `.comment()`, written into its SQL
-  /// definition as a comment.
-  final String? sqlComment;
-
   /// The Dart code generating the default expression for this column (as an
   /// `Expression` instance from `package:drift`).
   final AnnotatedDartCode? defaultArgument;
@@ -102,7 +98,6 @@ class DriftColumn implements HasType {
     this.documentationComment,
     this.constraints = const [],
     this.customConstraints,
-    this.sqlComment,
     this.referenceName,
     bool foreignConverter = false,
   }) {

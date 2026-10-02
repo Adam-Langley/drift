@@ -55,7 +55,6 @@ const String _methodClientDefault = 'clientDefault';
 const String _methodMap = 'map';
 const String _methodGenerated = 'generatedAs';
 const String _methodCheck = 'check';
-const String _methodComment = 'comment';
 const Set<String> _addsSqlConstraint = {
   _methodReferences,
   _methodAutoIncrement,
@@ -236,7 +235,6 @@ class ColumnParser {
     ColumnType columnType;
     String? foundExplicitName;
     String? foundCustomConstraint;
-    String? foundComment;
     Expression? customConstraintSource;
     AnnotatedDartCode? foundDefaultExpression;
     AnnotatedDartCode? clientDefaultExpression;
@@ -483,21 +481,6 @@ class ColumnParser {
             );
           }
           break;
-        case _methodComment:
-          foundComment = readStringLiteral(
-            remainingExpr.argumentList.arguments.first as Expression,
-          );
-          if (foundComment == null) {
-            _resolver.reportError(
-              DriftAnalysisError.inDartAst(
-                element,
-                remainingExpr.methodName,
-                'This comment cannot be resolved! Please only use a constant '
-                'string as parameter for .comment().',
-              ),
-            );
-          }
-          break;
         case _methodDefault:
           final args = remainingExpr.argumentList;
           final expression = args.arguments.single;
@@ -681,7 +664,6 @@ class ColumnParser {
         documentationComment: docString,
         constraints: constraintsWithoutDependencies,
         customConstraints: foundCustomConstraint,
-        sqlComment: foundComment,
         referenceName: _readReferenceName(element),
       ),
       (deps) {

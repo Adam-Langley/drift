@@ -390,10 +390,6 @@ abstract class TableOrViewWriter {
       additionalParams['requiredDuringInsert'] = isRequiredForInsert.toString();
     }
 
-    if (column.sqlComment != null) {
-      additionalParams['\$comment'] = asDartLiteral(column.sqlComment!);
-    }
-
     if (column.customConstraints != null) {
       additionalParams['\$customConstraints'] = asDartLiteral(
         column.customConstraints!,

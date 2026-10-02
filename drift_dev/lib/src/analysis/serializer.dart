@@ -249,7 +249,6 @@ class ElementSerializer {
           _serializeColumnConstraint(constraint),
       ],
       'customConstraints': column.customConstraints,
-      'sqlComment': column.sqlComment,
     };
   }
 
@@ -906,7 +905,6 @@ final class ElementDeserializer {
       documentationComment: json['documentationComment'] as String?,
       constraints: constraints,
       customConstraints: json['customConstraints'] as String?,
-      sqlComment: json['sqlComment'] as String?,
     );
 
     if (rawConverter != null) {
