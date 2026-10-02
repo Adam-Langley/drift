@@ -197,9 +197,6 @@ final class DriftTableResolver
           typeConverter: converter,
           defaultArgument: defaultArgument,
           documentationComment: column.definition?.documentationComment,
-          sqlComment: resolver.driver.options.driftFileCommentsInDdl
-              ? column.definition?.sqlComment
-              : null,
           customConstraints:
               (customConstraintsForDrift.isEmpty &&
                   resolver.driver.options.drift3Preview)
@@ -460,18 +457,5 @@ extension on ColumnDefinition {
     if (tokens.isEmpty) return null;
 
     return tokens.map((t) => '///${t.content}').join('\n');
-  }
-
-  /// The same comments as [documentationComment], as plain text for the
-  /// column's SQL definition (see `DriftOptions.driftFileCommentsInDdl`).
-  String? get sqlComment {
-    var lastBefore = first?.previous;
-    final lines = <String>[];
-    while (lastBefore is CommentToken) {
-      lines.insert(0, lastBefore.content.trim());
-      lastBefore = lastBefore.previous;
-    }
-    final text = lines.where((l) => l.isNotEmpty).join(' ');
-    return text.isEmpty ? null : text;
   }
 }

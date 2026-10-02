@@ -1,4 +1,3 @@
-import 'package:build/build.dart';
 import 'package:build_test/build_test.dart';
 import 'package:test/test.dart';
 
@@ -38,53 +37,5 @@ class Database extends _$Database {}
       result.dartOutputs,
       result.writer,
     );
-  }, tags: 'analyzer');
-
-  test('drift_file_comments_in_ddl writes a .drift column comment into the DDL', () async {
-    const drift = '''
-CREATE TABLE things (
-  -- The thing's name, as people know it;
-  -- across two lines.
-  name TEXT NOT NULL,
-  /* not a line comment, still documentation */
-  code TEXT,
-  plain INTEGER
-);
-''';
-    for (final enabled in [true, false]) {
-      final result = await emulateDriftBuild(
-        inputs: {
-          'a|lib/a.drift': drift,
-          'a|lib/main.dart': r'''
-import 'package:drift/drift.dart';
-
-part 'main.drift.dart';
-
-@DriftDatabase(include: {'a.drift'})
-class Database extends _$Database {}
-''',
-        },
-        options: BuilderOptions({'drift_file_comments_in_ddl': enabled}),
-      );
-      checkOutputs(
-        {
-          'a|lib/main.drift.dart': decodedMatches(
-            allOf(
-              // Documentation either way.
-              contains("/// The thing's name, as people know it;"),
-              enabled
-                  ? allOf(
-                      contains(r"$comment: 'The thing\'s name, as people know it; across two lines.'"),
-                      contains(r"$comment: 'not a line comment, still documentation'"),
-                      predicate<String>((code) => r'$comment:'.allMatches(code).length == 2, 'only the commented columns'),
-                    )
-                  : isNot(contains(r'$comment')),
-            ),
-          ),
-        },
-        result.dartOutputs,
-        result.writer,
-      );
-    }
   }, tags: 'analyzer');
 }

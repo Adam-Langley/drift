@@ -38,7 +38,6 @@ DriftOptions _$DriftOptionsFromJson(Map json) => $checkedCreate(
         'scoped_dart_components',
         'store_date_time_values_as_text',
         'upserts_write_null_values',
-        'drift_file_comments_in_ddl',
         'case_from_dart_to_sql',
         'write_to_columns_mixins',
         'assume_correct_reference',
@@ -147,10 +146,6 @@ DriftOptions _$DriftOptionsFromJson(Map json) => $checkedCreate(
         'upserts_write_null_values',
         (v) => v as bool? ?? false,
       ),
-      driftFileCommentsInDdl: $checkedConvert(
-        'drift_file_comments_in_ddl',
-        (v) => v as bool? ?? false,
-      ),
       caseFromDartToSql: $checkedConvert(
         'case_from_dart_to_sql',
         (v) =>
@@ -226,7 +221,6 @@ DriftOptions _$DriftOptionsFromJson(Map json) => $checkedCreate(
     'sqliteAnalysisOptions': 'sqlite',
     'storeDateTimeValuesAsText': 'store_date_time_values_as_text',
     'upsertsWriteNullValues': 'upserts_write_null_values',
-    'driftFileCommentsInDdl': 'drift_file_comments_in_ddl',
     'caseFromDartToSql': 'case_from_dart_to_sql',
     'writeToColumnsMixins': 'write_to_columns_mixins',
     'fatalWarnings': 'fatal_warnings',
@@ -272,7 +266,6 @@ Map<String, dynamic> _$DriftOptionsToJson(
   'scoped_dart_components': instance.scopedDartComponents,
   'store_date_time_values_as_text': instance.storeDateTimeValuesAsText,
   'upserts_write_null_values': instance.upsertsWriteNullValues,
-  'drift_file_comments_in_ddl': instance.driftFileCommentsInDdl,
   'case_from_dart_to_sql':
       _$CaseFromDartToSqlEnumMap[instance.caseFromDartToSql]!,
   'write_to_columns_mixins': instance.writeToColumnsMixins,
