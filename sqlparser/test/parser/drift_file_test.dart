@@ -238,6 +238,29 @@ CREATE INDEX x ON foo (a);
     expect(result.errors, isEmpty);
   });
 
+  test('AS name can list interfaces for the generated row class', () {
+    testDriftFile(
+      'CREATE TABLE tbl (id INTEGER NOT NULL) AS Thing IMPLEMENTS HasId, Named;',
+      DriftFile([
+        CreateTableStatement(
+          tableName: 'tbl',
+          columns: [
+            ColumnDefinition(
+              columnName: 'id',
+              typeName: 'INTEGER',
+              constraints: [NotNull(null)],
+            ),
+          ],
+          driftTableName: DriftTableName(
+            overriddenDataClassName: 'Thing',
+            useExistingDartClass: false,
+            implementing: ['HasId', 'Named'],
+          ),
+        ),
+      ]),
+    );
+  });
+
   test('declared statements can use existing classes syntax', () {
     testDriftFile(
       'foo WITH ExistingDartClass.c: SELECT 1;',

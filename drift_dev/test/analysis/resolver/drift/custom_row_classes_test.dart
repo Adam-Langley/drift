@@ -4,6 +4,43 @@ import 'package:test/test.dart';
 import '../../test_utils.dart';
 
 void main() {
+  test('AS name IMPLEMENTS gives the generated row class interfaces', () async {
+    final state = await TestBackend.inTest({
+      'a|lib/db.drift': '''
+import 'contracts.dart';
+
+CREATE TABLE lookups (
+  id INTEGER NOT NULL PRIMARY KEY,
+  name TEXT NOT NULL
+) AS Lookup IMPLEMENTS WithName, WithId;
+
+CREATE TABLE missing (
+  id INTEGER NOT NULL PRIMARY KEY
+) AS Missing IMPLEMENTS Nope;
+      ''',
+      'a|lib/contracts.dart': '''
+abstract class WithName { String get name; }
+abstract class WithId { int get id; }
+      ''',
+    });
+
+    final file = await state.analyze('package:a/db.drift');
+    final lookups = file.analysis[file.id('lookups')]!.result! as DriftTable;
+    expect(lookups.nameOfRowClass, 'Lookup');
+    expect(
+      lookups.interfacesForRowClass.map((i) => i.toString()),
+      ['WithName', 'WithId'],
+    );
+
+    expect(
+      file.allErrors,
+      [
+        isDriftError(contains('Could not find `Nope`'))
+            .withSpan('AS Missing IMPLEMENTS Nope'),
+      ],
+    );
+  });
+
   test('can use existing row classes in drift files', () async {
     final state = await TestBackend.inTest({
       'a|lib/db.drift': '''

@@ -42,10 +42,16 @@ class DriftTableName extends AstNode implements DriftSpecificNode {
   final String? constructorName;
   final bool useExistingDartClass;
 
+  /// Dart interfaces the generated row class implements, from
+  /// `AS Name IMPLEMENTS A, B`. The same as `@DataClassName(implementing:)`
+  /// on a Dart table; they are resolved through the drift file's imports.
+  final List<String> implementing;
+
   DriftTableName({
     required this.useExistingDartClass,
     required this.overriddenDataClassName,
     this.constructorName,
+    this.implementing = const [],
   });
 
   @override

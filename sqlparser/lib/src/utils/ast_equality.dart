@@ -602,7 +602,11 @@ class EqualityEnforcingVisitor implements AstVisitor<void, void> {
     _assert(
       current.overriddenDataClassName == e.overriddenDataClassName &&
           current.constructorName == e.constructorName &&
-          current.useExistingDartClass == e.useExistingDartClass,
+          current.useExistingDartClass == e.useExistingDartClass &&
+          const ListEquality<String>().equals(
+            current.implementing,
+            e.implementing,
+          ),
       e,
     );
   }

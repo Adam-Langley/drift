@@ -2010,10 +2010,25 @@ extension Parser on ParserState {
       ).identifier;
     }
 
+    // `AS Name IMPLEMENTS A, B`: interfaces for the generated row class. Not
+    // for `WITH`, where the class already exists.
+    final implementing = <String>[];
+    if (!useExisting &&
+        _check(TokenType.identifier) &&
+        (_peek as IdentifierToken).identifier.toLowerCase() == 'implements') {
+      _advance();
+      do {
+        implementing.add(
+          _consumeIdentifier('Expected the name of an interface').identifier,
+        );
+      } while (_matchOne(TokenType.comma));
+    }
+
     return DriftTableName(
       useExistingDartClass: useExisting,
       overriddenDataClassName: name,
       constructorName: constructorName,
+      implementing: implementing,
     )..setSpan(first, _previous);
   }
 

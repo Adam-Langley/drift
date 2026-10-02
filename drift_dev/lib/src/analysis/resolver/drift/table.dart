@@ -362,10 +362,18 @@ final class DriftTableResolver
 
     String? dartTableName, dataClassName;
     ExistingRowClass? existingRowClass;
+    final interfacesForRowClass = <AnnotatedDartCode>[];
 
     final driftTableInfo = stmt.driftTableName;
     if (driftTableInfo != null) {
       final overriddenNames = driftTableInfo.overriddenDataClassName;
+
+      for (final interface in driftTableInfo.implementing) {
+        final type = await findDartTypeOrReportError(interface, driftTableInfo);
+        if (type != null) {
+          interfacesForRowClass.add(AnnotatedDartCode.type(type));
+        }
+      }
 
       if (driftTableInfo.useExistingDartClass) {
         existingRowClass = await resolveExistingRowClass(
@@ -403,6 +411,7 @@ final class DriftTableResolver
       baseDartName: dartTableName,
       fixedEntityInfoName: dartTableName,
       existingRowClass: existingRowClass,
+      interfacesForRowClass: interfacesForRowClass,
       withoutRowId: table.withoutRowId,
       strict: table.isStrict,
       tableConstraints: tableConstraints,
