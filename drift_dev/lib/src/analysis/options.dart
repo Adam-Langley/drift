@@ -142,6 +142,13 @@ class DriftOptions {
   @JsonKey(name: 'upserts_write_null_values', defaultValue: false)
   final bool upsertsWriteNullValues;
 
+  /// Whether the `--` comments right before a column in a `.drift` file's
+  /// `CREATE TABLE` are also written into the column's SQL definition, as a
+  /// `/* ... */` comment after its type, so the database keeps them in its
+  /// schema. They are always the getter's dartdoc; this adds the DDL.
+  @JsonKey(name: 'drift_file_comments_in_ddl', defaultValue: false)
+  final bool driftFileCommentsInDdl;
+
   @JsonKey(name: 'case_from_dart_to_sql', defaultValue: CaseFromDartToSql.snake)
   final CaseFromDartToSql caseFromDartToSql;
 
@@ -193,6 +200,7 @@ class DriftOptions {
     this.sqliteAnalysisOptions,
     this.storeDateTimeValuesAsText = false,
     this.upsertsWriteNullValues = false,
+    this.driftFileCommentsInDdl = false,
     this.dialect = const DialectOptions(null, [SqlDialect.sqlite], null),
     this.caseFromDartToSql = CaseFromDartToSql.snake,
     this.preamble,
@@ -230,6 +238,7 @@ class DriftOptions {
     required this.sqliteAnalysisOptions,
     required this.storeDateTimeValuesAsText,
     required this.upsertsWriteNullValues,
+    required this.driftFileCommentsInDdl,
     required this.caseFromDartToSql,
     required this.writeToColumnsMixins,
     required this.fatalWarnings,
